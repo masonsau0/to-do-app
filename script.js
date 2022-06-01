@@ -12,11 +12,19 @@ if (todos) {      // if there is items in the todos local storage
     });
 }
 
-
-form.addEventListener('submit', (e) => {     // submit event fires when the user clicks a submit button or presses Enter while editing a field in a form. 
-    e.preventDefault();     // preventDefault() method cancels the event if it is cancelable | Clicking on a "Submit" button, prevent it from submitting a form
-    addTodo();
+form.addEventListener('keypress', (e) => {     // submit event fires when the user clicks a submit button or presses Enter while editing a field in a form. 
+    if (e.key === 'Enter') {
+        e.preventDefault();     // prevents page from reloading whjen pressing enter
+        addTodo();     // adds list item
+    } else {
+        return;
+    }
 });
+
+// form.addEventListener('submit', (e) => {     // submit event fires when the user clicks a submit button or presses Enter while editing a field in a form. 
+//     e.preventDefault();     // preventDefault() method cancels the event if it is cancelable | Clicking on a "Submit" button, prevent it from submitting a form
+//     addTodo();
+// });
 
 
 function addTodo(todo) {
@@ -35,23 +43,22 @@ function addTodo(todo) {
 
         todoEl.innerText = todoText;     // get inputted text\
 
-        // const removeBtn = document.createElement('button');
-        // removeBtn.classList.add('remove');
-        // removeBtn.innerHTML = `<i class="far fa-circle-xmark" ></i>`;
+        const removeBtn = document.createElement('button');
+        removeBtn.classList.add('remove');
+        removeBtn.innerHTML = `<i class="far fa-circle-xmark" ></i>`;
 
         todoEl.addEventListener('click', () => {
             todoEl.classList.toggle('completed');     // adds/removes a class called completed
             updateLS();
         });
 
-        todoEl.addEventListener('contextmenu', (e) => {    // right click deletes list item
-            e.preventDefault();
-            todoEl.remove();    // adds/removes a class called completed
+        removeBtn.addEventListener('click', () => {
+            todoEl.remove();    // removes a list item
             updateLS();
         });
 
         todosUL.appendChild(todoEl);
-        // todoEl.appendChild(removeBtn);  
+        todoEl.appendChild(removeBtn);  
         nothingToDo.remove();     // removes the 'nothing to do message'
 
         input.value = '';     // removes the inputted text at the top after submitted
@@ -74,5 +81,6 @@ function updateLS() {
 
     localStorage.setItem('todos', JSON.stringify(todos));
 }
+
 
 
